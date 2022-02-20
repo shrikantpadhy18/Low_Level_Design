@@ -1,2 +1,2 @@
 #ignore class files
-Driver.class
+*.class
