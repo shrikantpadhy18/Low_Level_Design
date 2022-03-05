@@ -1,5 +1,6 @@
 package services;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -14,8 +15,8 @@ public class GameServiceImpl  implements GameService{
     TicTacBoard board;
     Game game=new Game();
     Queue<Player>queue=new LinkedList<>();
-    Set<Integer>visitedRow=new HashSet<>();
-    Set<Integer>visitedCol=new HashSet<>();
+    List<int[]>visited=new ArrayList<>();
+    
     int[][]matrix;
     int counter=0;
     private static GameServiceImpl service=new GameServiceImpl();
@@ -34,23 +35,27 @@ public class GameServiceImpl  implements GameService{
         matrix=game.getBoard().getMatrix();
         Player[]playerList=game.getListofPlayer();
         queue.offer(playerList[0]);
+        queue.offer(playerList[1]);
         
         while(true)
         {
             Player playerData=queue.poll();
-            int row;
-            int col;
-            row=checkValidity(visitedRow);
-            col=checkValidity(visitedCol);
-            matrix[row][col]=playerData.getState();
+            
+            int[]data=checkValidity(visited);
+            System.out.println("Player name:"+playerData.getName()+" turn"+" state="+playerData.getState());
+
+            matrix[data[0]][data[1]]=playerData.getState();
+            endGame(playerData);
             if(checkIfPlayerWon(playerData))
             {
-                endGame(playerData);
+                System.out.println(playerData.getName()+" won the game"+" having state of "+playerData.getState());
+                
                 break;
             }
-            if(visitedRow.size()==3 && visitedCol.size()==3)
+            if(visited.size()==3*3)
             {
                 System.out.println("Game Drawn");
+                endGame(playerData);
                 break;
             }
             
@@ -61,7 +66,7 @@ public class GameServiceImpl  implements GameService{
 
     @Override
     public void endGame(Player p) {
-       System.out.println(p.getName()+" won the game"+" having state of "+p.getState());
+       
        
        System.out.println("The Final State of board");
        for(int i=0;i<3;i++){
@@ -192,18 +197,19 @@ public class GameServiceImpl  implements GameService{
     }
 
     @Override
-    public int checkValidity(Set<Integer> s) {
-        int row;
+    public int[] checkValidity(List<int[]> s) 
+    {
+        int random;
+        int random2;
         while(true){
-            row=generateRandom();
-            if(s.contains(row)){
-                continue;
-            }
-            else
+            random=(int)Math.floor(Math.random()*(2-0+1)+0); 
+            random2=(int)Math.floor(Math.random()*(2-0+1)+0); 
+            if(matrix[random][random2]==-1){
+                s.add(new int[]{random,random2});
                 break;
+            }
         }
-        s.add(row);
-        return(row);       
+        return(new int[]{random,random2});      
     }
 
 

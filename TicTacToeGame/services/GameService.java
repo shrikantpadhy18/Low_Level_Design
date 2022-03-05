@@ -1,5 +1,6 @@
 package services;
 
+import java.util.List;
 import java.util.Set;
 
 import models.Player;
@@ -13,5 +14,5 @@ public interface GameService {
     public int[][] initializeMatrix(int[][]m);
     public int generateRandom();
     public boolean checkIfPlayerWon(Player p);
-    public int  checkValidity(Set<Integer>s);
+    public int[]  checkValidity(List<int[]>s);
 }
